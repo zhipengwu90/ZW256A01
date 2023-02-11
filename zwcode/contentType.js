@@ -1,0 +1,20 @@
+exports.mimeTypes = {
+    ".css": "text/css",
+    ".gif": "image/gif",
+    ".html": "text/html",
+    ".htm": "text/html",
+    ".ico": "image/x-icon",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".js": "application/javascript",
+    ".json": "application/json",
+    ".mp4": "video/mp4",
+    ".pdf": "application/pdf",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".txt": "text/plain",
+    ".xml": "text/xml",
+    ".mp3":"audio/mpeg",
+    ".ogg":"audio/ogg",
+
+  };

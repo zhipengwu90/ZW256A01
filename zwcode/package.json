@@ -1,0 +1,11 @@
+{
+  "name": "zwcode",
+  "version": "1.0.0",
+  "description": "This is my package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wu",
+  "license": "ISC"
+}
