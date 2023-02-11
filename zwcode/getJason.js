@@ -37,8 +37,11 @@ exports.getJason = async (res,req, jsonPath, field, value) => {
           Zhipeng: "wu",
         });
         res.end(data);
+        webLog(`${req.method} ${req.url}`, 200);
+        
       })
-      .catch(() => {
-        noValuePage(res, req, NO_VALUE_MATCH_PAGE, 416);
+      .catch((err) => {
+        noValuePage(res, req, NO_VALUE_MATCH_PAGE, 416,"Range not satisfiable" );
+        
       });
   };

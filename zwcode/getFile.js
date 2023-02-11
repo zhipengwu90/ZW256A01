@@ -2,8 +2,9 @@ const fs = require("fs").promises;
 const {errorHandler} = require('./errorHandler');
 const path = require("path");
 const SERVER_ERROR_PAGE = path.join(__dirname, "../zwroot/errorpages/500.html");
+const {webLog} =require("./webLog");
 
-exports.getFile = async (res, req, localPath, contentType, status) => {
+exports.getFile = async (res, req, localPath, contentType, status, err) => {
     await fs
       .readFile(localPath)
       .then((contents) => {
@@ -15,18 +16,7 @@ exports.getFile = async (res, req, localPath, contentType, status) => {
           Zhipeng: "wu",
         });
         res.end(contents);
+        webLog(`${req.method} ${req.url}`, status, err) ;
       })
-      .catch((err) => {
-        fs.readFile(SERVER_ERROR_PAGE)
-        
-          .then((contents) => {
-            res.writeHead(500, {
-              "Content-Type": "text/html",
-              "Content-Length": contents.length,
-            });
-            res.end(contents);
-          })
-          .catch(()=>{errorHandler(res)});
-      });
-      // webLog(`${req.method} ${req.url}`, 200);
+   .catch((err)=>{errorHandler(req,res, err)});
   };

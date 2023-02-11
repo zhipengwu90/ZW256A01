@@ -3,8 +3,8 @@ const fs = require("fs").promises;
 const url = require("url");
 const path = require("path");
 const { mimeTypes } = require("./contentType");
-const {getFile} =require('./getFile');
-const {noValuePage} = require('./noValuePage');
+const {getFile} =require("./getFile");
+const {noValuePage} = require("./noValuePage");
 const {getJason} =require("./getJason");
 const {getdata} = require("./getdata");
 
@@ -49,14 +49,15 @@ http
 
     if (getdataIndex !== -1) {
       if (getdataIndex === pathParts.length - 1 || !dataValue) {
-        noValuePage(res,req, NO_VALUE_PAGE, 406);
+        noValuePage(res,req, NO_VALUE_PAGE, 406, "value is not specified" );
       } else if (getdataIndex !== -1 && getdataIndex === pathParts.length - 2) {
         getdata(res, req, getdataPath, dataValue.toLowerCase());
+
       }
     } else if (pathParts[1].toLowerCase() === "cars" && IsFiledExit) {
       let jsonPath = path.join(__dirname, "../zwdata/cars.json");
       if (!value) {
-        noValuePage(res, req, NO_VALUE_PAGE, 406);
+        noValuePage(res, req, NO_VALUE_PAGE, 406, "value is not specified" );
       } else {
         getJason(res, req,jsonPath, isfiledNull, value);
       }
@@ -69,8 +70,8 @@ http
           fs.access(localPath).then(() => {
             getFile(res, req, localPath, contentType, 200);
           })
-          .catch(()=>{
-            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404);
+          .catch((err)=>{
+            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404, err)
           });
         })
         .catch((err) => {
@@ -78,11 +79,12 @@ http
             res.writeHead(204);
             res.end();
           } else {
-            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404);
+            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404, err);
           }
         });
     } else {
-      getFile(res,req,  UNSUPPORTED_TYPE_PAGE, "text/html", 415);
+      getFile(res,req,  UNSUPPORTED_TYPE_PAGE, "text/html", 415, "Unsupported Media Type");
+      
     }
   })
   .listen(PORT);

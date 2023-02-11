@@ -3,6 +3,7 @@ const {noValuePage} = require('./noValuePage');
 const path = require("path");
 const NO_VALUE_MATCH_PAGE = path.join( __dirname, "../zwroot/errorpages/416.html"
 );
+const {webLog} = require("./webLog");
 
 
 exports.getdata = async (res, req, getdataPath, value) => {
@@ -15,7 +16,8 @@ exports.getdata = async (res, req, getdataPath, value) => {
           let data = { [value]: result[value] };
           return data;
         } else {
-          throw err;
+          
+          throw err ="Range not satisfiable" ;
         }
       })
       .then((data) => {
@@ -35,8 +37,9 @@ exports.getdata = async (res, req, getdataPath, value) => {
         </html>
         `
         );
+        webLog(`${req.method} ${req.url}`, 200);
       })
-      .catch(() => {
-        noValuePage(res,req, NO_VALUE_MATCH_PAGE, 416);
+      .catch((err) => {
+        noValuePage(res,req, NO_VALUE_MATCH_PAGE, 416, err );
       });
   };

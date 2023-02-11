@@ -1,7 +1,8 @@
 const fs = require("fs").promises;
 const {errorHandler} = require('./errorHandler');
+const {webLog} = require('./webLog');
 
-exports.noValuePage = async (res, req, noValuePath, status) => {
+exports.noValuePage = async (res, req, noValuePath, status, err) => {
     await fs
       .readFile(noValuePath)
       .then((result) => {
@@ -13,9 +14,9 @@ exports.noValuePage = async (res, req, noValuePath, status) => {
           Zhipeng: "wu",
         });
         res.end(result);
+        webLog(`${req.method} ${req.url}`, status, err);
       })
-      .catch(() => {
-        console.log("error");
-        errorHandler(res);
+      .catch((err) => {
+        errorHandler(req,res, err);
       });
   };
