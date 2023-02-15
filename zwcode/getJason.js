@@ -14,19 +14,22 @@ exports.getJason = async (res,req, jsonPath, field, value) => {
           let data = result.filter((el) => el[field] === Number(value));
           if (!data.length) {
             throw err;
-          } else return JSON.stringify(data);
+          } else {
+            
+          return JSON.stringify(data.sort((a, b) => a.model.localeCompare(b.model)).sort((a, b) => a.make.localeCompare(b.make)))
+          };
         } else if (field === "cost") {
-          let data = result.filter((el) => Number(el[field]) < Number(value));
+          let data = result.filter((el) => Number(el[field]) <= Number(value));
           if (!data.length) {
             throw err;
-          } else return JSON.stringify(data);
+          } else return JSON.stringify(data.sort((a, b) => a.model.localeCompare(b.model)).sort((a, b) => a.make.localeCompare(b.make)));
         } else {
           let data = result.filter(
             (el) => el[field].toLowerCase() === value.toLowerCase()
           );
           if (!data.length) {
             throw err;
-          } else return JSON.stringify(data);
+          } else return JSON.stringify(data.sort((a, b) => a.model.localeCompare(b.model)).sort((a, b) => a.make.localeCompare(b.make)));
         }
       })
       .then((data) => {
