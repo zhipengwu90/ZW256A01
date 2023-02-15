@@ -36,8 +36,8 @@ exports.getJason = async (res,req, jsonPath, field, value) => {
         res.writeHead(200, {
           "Cache-Control": "no-cache",
           "Content-Type": "application/json",
-          Date: new Date().toISOString,
-          Zhipeng: "wu",
+          "Date": new Date().toISOString,
+          "Zhipeng": "wu",
         });
         res.end(data);
         webLog(`${req.method} ${req.url}`, 200);

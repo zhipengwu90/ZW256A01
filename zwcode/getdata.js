@@ -23,10 +23,10 @@ exports.getdata = async (res, req, getdataPath, value) => {
       .then((data) => {
         res.writeHead(200, {
           "Cache-Control": "no-cache",
-          Function: "Simple Search",
+          "Function": "Simple Search",
           "Content-Type": "text/html",
-          Date: new Date().toISOString,
-          Zhipeng: "wu",
+          "Date": new Date().toISOString,
+          "Zhipeng": "wu",
         });
         res.end(
           `

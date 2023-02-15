@@ -12,8 +12,8 @@ exports.getFile = async (res, req, localPath, contentType, status, err) => {
           "Cache-Control": "no-cache",
           "Content-Type": contentType,
           "Content-length": contents.length,
-          Date: new Date().toISOString,
-          Zhipeng: "wu",
+          "Date": new Date().toISOString,
+          "Zhipeng": "wu",
         });
         res.end(contents);
         webLog(`${req.method} ${req.url}`, status, err) ;
