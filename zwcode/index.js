@@ -3,10 +3,10 @@ const fs = require("fs").promises;
 const url = require("url");
 const path = require("path");
 const { mimeTypes } = require("./contentType");
-const {getFile} =require("./getFile");
-const {noValuePage} = require("./noValuePage");
-const {getJason} =require("./getJason");
-const {getdata} = require("./getdata");
+const { getFile } = require("./getFile");
+const { noValuePage } = require("./noValuePage");
+const { getJason } = require("./getJason");
+const { getdata } = require("./getdata");
 
 const PORT = 9000;
 const WEBROOT = path.join(__dirname, "../zwroot/public");
@@ -34,7 +34,7 @@ http
     let ext = pathOject.ext || DEFAULT_EXT;
     let contentType = mimeTypes[ext];
     let localPath = path.join(WEBROOT, pathname, filename);
-    const pathParts = urlObject.pathname.split("/");
+    let pathParts = urlObject.pathname.split("/");
     const ALLOWED_FIELDS = ["model", "make", "year", "condition", "cost"];
     let field = pathParts[2] || null;
     let isfiledNull = field ? field.toLowerCase() : null;
@@ -47,19 +47,16 @@ http
 
     let dataValue = pathParts[pathParts.length - 1];
 
-    if (getdataIndex !== -1) {
-      if (getdataIndex === pathParts.length - 1 || !dataValue) {
-        noValuePage(res,req, NO_VALUE_PAGE, 406, "value is not specified" );
-      } else if (getdataIndex !== -1 && getdataIndex === pathParts.length - 2) {
-        getdata(res, req, getdataPath, dataValue.toLowerCase());
-
-      }
+    if (getdataIndex !== -1 && getdataIndex === pathParts.length - 2) {
+      getdata(res, req, getdataPath, dataValue.toLowerCase());
+    } else if (getdataIndex !== -1 && getdataIndex === pathParts.length - 1) {
+      noValuePage(res, req, NO_VALUE_PAGE, 406, "value is not specified");
     } else if (pathParts[1].toLowerCase() === "cars" && IsFiledExit) {
       let jsonPath = path.join(__dirname, "../zwdata/cars.json");
       if (!value) {
-        noValuePage(res, req, NO_VALUE_PAGE, 406, "value is not specified" );
+        noValuePage(res, req, NO_VALUE_PAGE, 406, "value is not specified");
       } else {
-        getJason(res, req,jsonPath, isfiledNull, value);
+        getJason(res, req, jsonPath, isfiledNull, value);
       }
     } else if (contentType) {
       fs.stat(localPath)
@@ -67,24 +64,31 @@ http
           if (stats.isDirectory()) {
             localPath = path.join(localPath, DEFAULT_FILE);
           }
-          fs.access(localPath).then(() => {
-            getFile(res, req, localPath, contentType, 200);
-          })
-          .catch((err)=>{
-            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404, err)
-          });
+          fs.access(localPath)
+            .then(() => {
+              getFile(res, req, localPath, contentType, 200);
+            })
+            .catch((err) => {
+              getFile(res, req, NOT_FOUND_ERROR_PAGE, "text/html", 404, err);
+            });
         })
         .catch((err) => {
           if (filename === FAVICON_NAME) {
             res.writeHead(204);
             res.end();
           } else {
-            getFile(res,req,  NOT_FOUND_ERROR_PAGE, "text/html", 404, err);
+            getFile(res, req, NOT_FOUND_ERROR_PAGE, "text/html", 404, err);
           }
         });
     } else {
-      getFile(res,req,  UNSUPPORTED_TYPE_PAGE, "text/html", 415, "Unsupported Media Type");
-      
+      getFile(
+        res,
+        req,
+        UNSUPPORTED_TYPE_PAGE,
+        "text/html",
+        415,
+        "Unsupported Media Type"
+      );
     }
   })
   .listen(PORT);
